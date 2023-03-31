@@ -1,4 +1,4 @@
-package com.soufianesaadouni.sams.ui.view
+package com.soufianesaadouni.sams.ui.view.auth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -23,18 +23,36 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.soufianesaadouni.sams.ui.theme.SAMSTheme
+import com.soufianesaadouni.sams.ui.viewmodel.TeacherViewModel
 
 @Preview(showBackground = true)
 @Composable
 fun LogIn(
     navController: NavHostController = rememberNavController()
 ) {
-    var emailText by remember {
+    val teacherViewModel = TeacherViewModel()
+    if (teacherViewModel.isUserSignedIn()) {
+        navController.navigate("classes") {
+            // To remove this composable from the stack
+            popUpTo("logIn") {
+                inclusive = true
+            }
+        }
+    }
+
+    var email by remember {
         mutableStateOf(TextFieldValue(""))
     }
-    var passwordText by remember {
+    var password by remember {
         mutableStateOf(TextFieldValue(""))
     }
+
+    val (isSnackBarVisible, setIsSnackBarVisible) = remember {
+        mutableStateOf(false)
+    }
+
+    val (message, setMessage) = remember { mutableStateOf("") }
+
 
     SAMSTheme {
         Box(
@@ -52,8 +70,8 @@ fun LogIn(
                 )
                 Spacer(modifier = Modifier.size(24.dp))
                 TextField(
-                    value = emailText,
-                    onValueChange = { emailText = it },
+                    value = email,
+                    onValueChange = { email = it },
                     label = { Text("Email") },
                     placeholder = { Text("Enter your email here") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -65,8 +83,8 @@ fun LogIn(
                         )
                     },
                 )
-                TextField(value = passwordText,
-                    onValueChange = { passwordText = it },
+                TextField(value = password,
+                    onValueChange = { password = it },
                     label = { Text("Password") },
                     placeholder = { Text("Enter your password here") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -97,9 +115,25 @@ fun LogIn(
                         modifier = Modifier.padding(4.dp)
                     )
                 }
-                //Spacer(modifier = Modifier.size(24.dp))
-                Button(onClick = { /*TODO*/
-                    navController.navigate("classes")
+                Button(onClick = {
+                    teacherViewModel
+                        .signIn(email = email.text, password = password.text)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                navController.navigate("classes") {
+                                    // To remove this composable from the stack
+                                    popUpTo("logIn") {
+                                        inclusive = true
+                                    }
+                                }
+                                /*
+                                setMessage("Teacher is logged in successfully")
+                                setIsSnackBarVisible(true)*/
+                            } else {
+                                setMessage("Error cannot logged in!!")
+                                setIsSnackBarVisible(true)
+                            }
+                        }
                 }) {
                     Text("Log In", modifier = Modifier.padding(4.dp))
                 }
@@ -109,8 +143,12 @@ fun LogIn(
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
                 Button(
-                    onClick = { /*TODO*/
-                        navController.navigate("signUp")
+                    onClick = {
+                        navController.navigate("signUp") {
+                            popUpTo("logIn") {
+                                inclusive = true
+                            }
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
                 ) {
@@ -127,8 +165,21 @@ fun LogIn(
                             append("Sign Up")
                         }
                     })
+
+                    if (isSnackBarVisible) {
+                        Snackbar(action = {
+                            Button(onClick = { /*TODO*/
+                                setIsSnackBarVisible(false)
+                            }) {
+                                Text("Dismiss")
+                            }
+                        }) {
+                            Text(message)
+                        }
+                    }
                 }
             }
         }
+
     }
 }

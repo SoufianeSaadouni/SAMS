@@ -1,23 +1,42 @@
 package com.soufianesaadouni.sams.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.soufianesaadouni.sams.data.model.Student
-import kotlinx.coroutines.flow.Flow
+import androidx.lifecycle.viewModelScope
+import com.soufianesaadouni.sams.data.model.Classe
+import com.soufianesaadouni.sams.data.repository.ClasseRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
-class ClasseViewModel: ViewModel() {
-    // Creating a MutableStateFlow to hold the student data
-    private val _studentFlow= MutableStateFlow<Student?>(null)
+class ClasseViewModel(private val repository: ClasseRepository) : ViewModel() {
+    // Creating a MutableStateFlow to hold the classe data
+    private val _classes = MutableStateFlow<List<Classe?>>(emptyList())
+    val classes = _classes
 
-    // Exposing the student as a read only flow
-    val studentFlow:Flow<Student?> = _studentFlow
-
-    // Updating the student
-    fun updateStudent(student: Student){
-        _studentFlow.value = student
+    private fun fetch() {
+        viewModelScope.launch {
+            _classes.value = repository.fetch()
+        }
     }
 
-    fun removeStudent(){
+    fun add(classe: Classe) {
+        viewModelScope.launch {
+            repository.add(classe)
+            fetch()
+        }
+    }
 
+    // Updating the classe
+    fun update(classeID: String, classe: Classe) {
+        viewModelScope.launch {
+            repository.update(classeID, classe)
+            fetch()
+        }
+    }
+
+    fun remove(classeID: String) {
+        viewModelScope.launch {
+            repository.delete(classeID)
+            fetch()
+        }
     }
 }

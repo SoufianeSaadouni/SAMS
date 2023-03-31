@@ -1,4 +1,4 @@
-package com.soufianesaadouni.sams
+package com.soufianesaadouni.sams.ui.view
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,11 +30,11 @@ fun MyDialog(
             properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true),
             onDismissRequest = { /*TODO*/ isDialogOpened = !isDialogOpened },
             content = {
-                Column() {
+                Column {
                     Box(modifier = Modifier.fillMaxSize()) {
 
                     }
-                    Row() {
+                    Row {
                         Button(onClick = { /*TODO*/ }) {
                             Text("Button1", color = Color.Black)
                         }

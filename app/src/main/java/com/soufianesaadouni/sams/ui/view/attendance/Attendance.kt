@@ -1,4 +1,4 @@
-package com.soufianesaadouni.sams.ui.view
+package com.soufianesaadouni.sams.ui.view.attendance
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*

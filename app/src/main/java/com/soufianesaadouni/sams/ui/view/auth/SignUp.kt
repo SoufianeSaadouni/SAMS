@@ -1,4 +1,4 @@
-package com.soufianesaadouni.sams.ui.view
+package com.soufianesaadouni.sams.ui.view.auth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -40,6 +40,12 @@ fun SignUp(
     var password by remember {
         mutableStateOf(TextFieldValue(""))
     }
+
+    val (isSnackBarVisible, setIsSnackBarVisible) = remember {
+        mutableStateOf(false)
+    }
+
+    val (message, setMessage) = remember { mutableStateOf("") }
 
     SAMSTheme {
         Box(
@@ -104,16 +110,39 @@ fun SignUp(
                         }
                     })
                 Spacer(modifier = Modifier.size(8.dp))
-                Button(onClick = { /*TODO*/
-                    teacherViewModel.createTeacher(email.text, password.text)
-                    navController.navigate("classes")
+                Button(onClick = {
+                    teacherViewModel
+                        .createTeacher(fullName.text, email.text, password.text)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                /*
+                                setMessage("New teacher is created successfully")
+                                setIsSnackBarVisible(true)
+                                */
+
+                                navController.navigate("classes") {
+                                    // To remove this composable from the stack
+                                    popUpTo("signUp") {
+                                        inclusive = true
+                                    }
+                                }
+
+                            } else {
+                                setMessage("Error cannot create a new teacher!!")
+                                setIsSnackBarVisible(true)
+                            }
+                        }
                 }) {
                     Text("Sign Up", modifier = Modifier.padding(4.dp))
                 }
                 Text("- - - OR - - -", color = Color.DarkGray)
                 Button(
                     onClick = { /*TODO*/
-                        navController.navigate("logIn")
+                        navController.navigate("logIn") {
+                            popUpTo("signUp") {
+                                inclusive = true
+                            }
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
                 ) {
@@ -131,7 +160,21 @@ fun SignUp(
                         }
                     })
                 }
+
+                if (isSnackBarVisible) {
+                    Snackbar(action = {
+                        Button(onClick = { /*TODO*/
+                            setIsSnackBarVisible(false)
+                        }) {
+                            Text("Dismiss")
+                        }
+                    }) {
+                        Text(message)
+                    }
+                }
+
             }
         }
+
     }
 }

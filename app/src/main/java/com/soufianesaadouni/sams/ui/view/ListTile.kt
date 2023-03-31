@@ -1,4 +1,4 @@
-package com.soufianesaadouni.sams
+package com.soufianesaadouni.sams.ui.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -14,10 +14,8 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun ListTile() {
-    val title = "Item -1"
-
-    var isExpanded by remember {
+fun ListTile(title: String = "Item -1") {
+    val (isMenuExpanded, setIsMenuExpanded) = remember {
         mutableStateOf(false)
     }
 
@@ -27,7 +25,7 @@ fun ListTile() {
     }
     */
 
-    Box() {
+    Box {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -36,30 +34,35 @@ fun ListTile() {
                 .padding(horizontal = 16.dp),
         ) {
             Text(text = title)
-            IconButton(onClick = {
-                /*TODO*/
-                isExpanded = !isExpanded
-            }) {
-                Icon(
-                    Icons.Filled.MoreVert,
-                    tint = Color.Black,
-                    contentDescription = "More options",
-                )
-            }
-            DropdownMenu(expanded = isExpanded, onDismissRequest = { /*TODO*/
-                isExpanded = false
-            }) {
-                DropdownMenuItem(
-                    text = { Text("Update", color = Color.Black) },
-                    onClick = { /*TODO*/ })
-                DropdownMenuItem(
-                    text = { Text("Delete", color = Color.Black) },
-                    onClick = { /*TODO*/ })
-                Divider()
-                DropdownMenuItem(
-                    text = { Text("Info", color = Color.Black) },
-                    onClick = { /*TODO*/
-                    })
+            Column {
+                Box {
+                    IconButton(onClick = {
+                        /*TODO*/
+                        setIsMenuExpanded(!isMenuExpanded)
+                    }) {
+                        Icon(
+                            Icons.Filled.MoreVert,
+                            tint = Color.Black,
+                            contentDescription = "More options",
+                        )
+                    }
+                    DropdownMenu(expanded = isMenuExpanded, onDismissRequest = { /*TODO*/
+                        setIsMenuExpanded(false)
+                    }) {
+                        DropdownMenuItem(
+                            text = { Text("Update", color = Color.Black) },
+                            onClick = { /*TODO*/ })
+                        DropdownMenuItem(
+                            text = { Text("Delete", color = Color.Black) },
+                            onClick = { /*TODO*/ })
+                        Divider()
+                        DropdownMenuItem(
+                            text = { Text("Info", color = Color.Black) },
+                            onClick = { /*TODO*/
+                            })
+                    }
+
+                }
             }
         }
     }

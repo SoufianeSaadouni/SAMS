@@ -1,4 +1,4 @@
-package com.soufianesaadouni.sams
+package com.soufianesaadouni.sams.ui.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState

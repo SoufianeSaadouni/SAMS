@@ -1,15 +1,30 @@
-package com.soufianesaadouni.sams.ui.view
+package com.soufianesaadouni.sams.ui.view.attendance
 
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import com.soufianesaadouni.sams.data.model.Classe
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.soufianesaadouni.sams.data.repository.StudentRepository
+import com.soufianesaadouni.sams.ui.view.ListTile
 import com.soufianesaadouni.sams.ui.viewmodel.StudentViewModel
 
 @Composable
-fun StudentsTab(/*studentViewModel: StudentViewModel*/){
-    val studentViewModel = StudentViewModel()
+fun StudentsTab(/*studentViewModel: StudentViewModel*/) {
+    val studentRepository =
+        StudentRepository(
+            FirebaseFirestore.getInstance(),
+            FirebaseAuth.getInstance())
 
-    val student by studentViewModel.studentFlow.collectAsState(initial = Classe("none","none","none"))
+    val students by StudentViewModel(studentRepository)
+        .students
+        .collectAsState(initial = emptyList())
 
-    student?.let { Text(it.fullName) }
+    LazyColumn {
+        items(students.size) { index ->
+            ListTile(title = students.elementAt(index)!!.fullName)
+        }
+    }
 }
