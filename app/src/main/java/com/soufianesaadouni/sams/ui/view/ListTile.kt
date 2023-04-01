@@ -1,5 +1,6 @@
 package com.soufianesaadouni.sams.ui.view
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -25,45 +26,51 @@ fun ListTile(title: String = "Item -1") {
     }
     */
 
-    Box {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-        ) {
-            Text(text = title)
-            Column {
-                Box {
-                    IconButton(onClick = {
-                        /*TODO*/
-                        setIsMenuExpanded(!isMenuExpanded)
-                    }) {
-                        Icon(
-                            Icons.Filled.MoreVert,
-                            tint = Color.Black,
-                            contentDescription = "More options",
-                        )
-                    }
-                    DropdownMenu(expanded = isMenuExpanded, onDismissRequest = { /*TODO*/
-                        setIsMenuExpanded(false)
-                    }) {
-                        DropdownMenuItem(
-                            text = { Text("Update", color = Color.Black) },
-                            onClick = { /*TODO*/ })
-                        DropdownMenuItem(
-                            text = { Text("Delete", color = Color.Black) },
-                            onClick = { /*TODO*/ })
-                        Divider()
-                        DropdownMenuItem(
-                            text = { Text("Info", color = Color.Black) },
-                            onClick = { /*TODO*/
-                            })
-                    }
+    Button(
+        onClick = { /*TODO*/ }, shape = ShapeDefaults.ExtraLarge, border = BorderStroke(
+            0.dp, Color.LightGray
+        ), colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent
+        )
+    ) {
+        Box {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            ) {
+                Text(text = title)
+                Column {
+                    Box {
+                        IconButton(onClick = {
+                            /*TODO*/
+                            setIsMenuExpanded(!isMenuExpanded)
+                        }) {
+                            Icon(
+                                Icons.Filled.MoreVert,
+                                tint = Color.Black,
+                                contentDescription = "More options",
+                            )
+                        }
+                        DropdownMenu(expanded = isMenuExpanded, onDismissRequest = { /*TODO*/
+                            setIsMenuExpanded(false)
+                        }) {
+                            DropdownMenuItem(text = { Text("Update", color = Color.Black) },
+                                onClick = { /*TODO*/ })
+                            DropdownMenuItem(text = { Text("Delete", color = Color.Black) },
+                                onClick = { /*TODO*/ })
+                            Divider()
+                            DropdownMenuItem(text = { Text("Info", color = Color.Black) },
+                                onClick = { /*TODO*/
+                                })
+                        }
 
+                    }
                 }
             }
         }
     }
+
 }

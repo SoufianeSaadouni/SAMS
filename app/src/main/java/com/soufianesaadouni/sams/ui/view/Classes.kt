@@ -2,9 +2,6 @@ package com.soufianesaadouni.sams.ui.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
@@ -13,7 +10,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,8 +22,6 @@ import com.soufianesaadouni.sams.data.repository.ClasseRepository
 import com.soufianesaadouni.sams.ui.theme.SAMSTheme
 import com.soufianesaadouni.sams.ui.viewmodel.ClasseViewModel
 import com.soufianesaadouni.sams.ui.viewmodel.TeacherViewModel
-import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
@@ -37,10 +31,11 @@ fun Classes(navController: NavHostController = rememberNavController()) {
     val classeRepository =
         ClasseRepository(FirebaseFirestore.getInstance(), FirebaseAuth.getInstance())
     val classeViewModel = ClasseViewModel(classeRepository)
+    classeViewModel.fetch()
 
     val students by classeViewModel
         .classes
-        .collectAsState(initial = emptyList())
+        .collectAsState(/*initial = emptyList()*/)
 
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
@@ -109,25 +104,19 @@ fun Classes(navController: NavHostController = rememberNavController()) {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(it),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                items(students.size) { index ->
-                    ListTile(students[index]!!.name)
-                }
-                /*
-                repeat(itemsCount) { iteration ->
-                    Box(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .clip(CircleShape)
-                            .align(Alignment.CenterHorizontally)
-                            .fillMaxWidth()
-                    ) {
+                    items(students.size) { index ->
+                        Box(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .fillMaxWidth()
+                        ) {
+                            ListTile(students[index]!!.name)
 
-
+                        }
                     }
-                }*/
-            }
+                }
             },
             floatingActionButton = {
                 FloatingActionButton(

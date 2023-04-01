@@ -5,14 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.soufianesaadouni.sams.data.model.Classe
 import com.soufianesaadouni.sams.data.repository.ClasseRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ClasseViewModel(private val repository: ClasseRepository) : ViewModel() {
     // Creating a MutableStateFlow to hold the classe data
     private val _classes = MutableStateFlow<List<Classe?>>(emptyList())
-    val classes = _classes
+    val classes: StateFlow<List<Classe?>> = _classes
 
-    private fun fetch() {
+    fun fetch() {
         viewModelScope.launch {
             _classes.value = repository.fetch()
         }
