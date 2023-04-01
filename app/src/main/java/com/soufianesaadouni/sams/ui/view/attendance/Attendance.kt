@@ -1,7 +1,10 @@
 package com.soufianesaadouni.sams.ui.view.attendance
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
@@ -13,13 +16,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.soufianesaadouni.sams.ui.theme.SAMSTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun Attendance() {
+fun Attendance(navController: NavHostController = rememberNavController(), arg1: String? = "") {
     var currentTabIndex by remember { mutableStateOf(0) }
     val tabs = listOf("Students", "Attendance", "Statistics")
 

@@ -1,9 +1,11 @@
 package com.soufianesaadouni.sams.ui.view
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.soufianesaadouni.sams.ui.view.attendance.Attendance
 import com.soufianesaadouni.sams.ui.view.auth.LogIn
 import com.soufianesaadouni.sams.ui.view.auth.SignUp
@@ -21,7 +23,7 @@ fun Navigation() {
             SignUp(navController)
         }
         composable(route = "classes") {
-            Classes()
+            Classes(navController)
         }
         composable(route = "attendance") {
             Attendance()

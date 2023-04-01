@@ -112,7 +112,7 @@ fun Classes(navController: NavHostController = rememberNavController()) {
                                 .padding(8.dp)
                                 .fillMaxWidth()
                         ) {
-                            ListTile(students[index]!!.name)
+                            ListTile(navController, students[index]!!.name)
 
                         }
                     }

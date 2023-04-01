@@ -11,11 +11,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.soufianesaadouni.sams.utils.RouteDestinations
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun ListTile(title: String = "Item -1") {
+fun ListTile(
+    navController: NavHostController = rememberNavController(),
+    title: String = "Item -1"
+) {
     val (isMenuExpanded, setIsMenuExpanded) = remember {
         mutableStateOf(false)
     }
@@ -27,7 +33,9 @@ fun ListTile(title: String = "Item -1") {
     */
 
     Button(
-        onClick = { /*TODO*/ }, shape = ShapeDefaults.ExtraLarge, border = BorderStroke(
+        onClick = { /*TODO delete later*/
+            navController.navigate("attendance")
+        }, shape = ShapeDefaults.ExtraLarge, border = BorderStroke(
             0.dp, Color.LightGray
         ), colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent
@@ -66,11 +74,9 @@ fun ListTile(title: String = "Item -1") {
                                 onClick = { /*TODO*/
                                 })
                         }
-
                     }
                 }
             }
         }
     }
-
 }

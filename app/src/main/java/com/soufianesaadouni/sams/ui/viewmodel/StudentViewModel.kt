@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 class StudentViewModel(private val repository: StudentRepository) : ViewModel() {
     // Creating a MutableStateFlow to hold the student data
     private val _students = MutableStateFlow<List<Student?>>(emptyList())
-    val students = _students
+    val students: StateFlow<List<Student?>>  = _students
 
     private fun fetch() {
         viewModelScope.launch {
