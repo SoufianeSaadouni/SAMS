@@ -12,11 +12,12 @@ import com.soufianesaadouni.sams.ui.view.ListTile
 import com.soufianesaadouni.sams.ui.viewmodel.StudentViewModel
 
 @Composable
-fun StudentsTab(/*studentViewModel: StudentViewModel*/) {
+fun StudentsTab(/*studentViewModel: StudentViewModel*/classeID: String = "Empty") {
     val studentRepository =
         StudentRepository(
             FirebaseFirestore.getInstance(),
-            FirebaseAuth.getInstance())
+            FirebaseAuth.getInstance(),
+	    classeID)
 
     val students by StudentViewModel(studentRepository)
         .students

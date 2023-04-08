@@ -4,13 +4,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.soufianesaadouni.sams.data.model.Classe
 import com.soufianesaadouni.sams.data.repository.ClasseRepository
-import com.soufianesaadouni.sams.ui.theme.SAMSTheme
+import com.soufianesaadouni.sams.ui.view.dialogs.AddClasse
 import com.soufianesaadouni.sams.ui.viewmodel.ClasseViewModel
 import com.soufianesaadouni.sams.ui.viewmodel.TeacherViewModel
 
@@ -37,128 +37,110 @@ fun Classes(navController: NavHostController = rememberNavController()) {
         .classes
         .collectAsState(/*initial = emptyList()*/)
 
-    val sheetState = rememberModalBottomSheetState()
-    val coroutineScope = rememberCoroutineScope()
-
-    var classeName by remember {
-        mutableStateOf(TextFieldValue(""))
+    var openBottomSheet by rememberSaveable {
+        mutableStateOf(false)
     }
 
+    var isDialogShown by remember { mutableStateOf(false) }
 
     val itemsList = arrayOf("Rate", "Share", "Exit")
     val (isMenuExpanded, setIsMenuExpanded) = remember {
         mutableStateOf(false)
     }
 
-    SAMSTheme {
-        Scaffold(
-            topBar = {
-                CenterAlignedTopAppBar(
-                    colors = TopAppBarDefaults.topAppBarColors(),
-                    title = {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "Classes")
-                        }
-                    },
-                    actions = {
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(),
+                title = {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(text = "Classes")
+                    }
+                },
+                actions = {
 
-                        DropdownMenu(expanded = isMenuExpanded, onDismissRequest = { /*TODO*/ }) {
-                            itemsList.forEachIndexed { _, title ->
-                                DropdownMenuItem(text = { Text(title) }, onClick = {
-                                    setIsMenuExpanded(!isMenuExpanded)
-                                })
-                            }
-                        }
-                        IconButton(onClick = {
+                    DropdownMenu(
+                        expanded = isMenuExpanded,
+                        onDismissRequest = {
                             setIsMenuExpanded(!isMenuExpanded)
-
                         }) {
-                            Icon(
-                                Icons.Filled.MoreVert,
-                                contentDescription = "More options",
-                            )
-                        }
-
-                        IconButton(onClick = {
-
-                            //TODO Sign out
-                            teacherViewModel.signOut()
-                            navController.navigate("logIn") {
-                                // To remove this composable from the stack
-                                popUpTo("classes") {
-                                    inclusive = true
-                                }
-                            }
-                        }) {
-                            Icon(
-                                Icons.Filled.Phone,
-                                contentDescription = "Sign out",
-                            )
-                        }
-                    },
-                )
-            },
-            content = {
-                it
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(students.size) { index ->
-                        Box(
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .fillMaxWidth()
-                        ) {
-                            ListTile(navController, students[index]!!.name)
-
+                        itemsList.forEachIndexed { _, title ->
+                            DropdownMenuItem(text = { Text(title) }, onClick = {
+                                setIsMenuExpanded(!isMenuExpanded)
+                            })
                         }
                     }
-                }
-            },
-            floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        classeViewModel.add(Classe("CLASSE 1998"))
-                        /*
-                        coroutineScope.launch {
-                            sheetState.show()
-                        }*/
+                    IconButton(onClick = {
+                        setIsMenuExpanded(!isMenuExpanded)
+
                     }) {
-                    Icon(
-                        Icons.Filled.Add,
-                        contentDescription = "More options",
-                    )
-                }
-            },
-        )
-/*
-        ModalBottomSheet(sheetState = sheetState, onDismissRequest = {
-            coroutineScope.launch {
-                sheetState.hide()
-            }
-        }) {
-            Column {
-                TextField(
-                    value = classeName,
-                    onValueChange = { classeName = it },
-                    label = { Text("Classe Name") },
-                    placeholder = { Text("Enter your classe name here") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                )
-                Spacer(modifier = Modifier.size(24.dp))
-                Button(onClick = {
-                    classeViewModel.add(classe = Classe(classeName.text))
-                    coroutineScope.launch {
-                        sheetState.hide()
+                        Icon(
+                            Icons.Filled.MoreVert,
+                            contentDescription = "More options",
+                        )
                     }
-                }) {
-                    Text("Save")
+
+                    IconButton(onClick = {
+                        teacherViewModel.signOut()
+                        navController.navigate("logIn") {
+                            // To remove this composable from the stack
+                            popUpTo("classes") {
+                                inclusive = true
+                            }
+                        }
+                    }) {
+                        Icon(
+                            Icons.Filled.ExitToApp,
+                            contentDescription = "Sign out",
+                        )
+                    }
+                },
+            )
+        },
+        content = {
+            it
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(students.size) { index ->
+                    Box(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth()
+                    ) {
+                        ListTile(
+                            students[index]!!.name,
+                            onclick = {
+                                val classeID = students[index]!!.id
+                                navController.navigate("attendance/${classeID}")
+                            })
+                    }
                 }
-                Spacer(modifier = Modifier.size(24.dp))
             }
-        }*/
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    isDialogShown = true
+                }) {
+                Icon(
+                    Icons.Filled.Add,
+                    contentDescription = "More options",
+                )
+            }
+        },
+    )
+
+    // Display Dialog
+    if (isDialogShown) {
+        AddClasse(onSaveClick = {
+            classeViewModel.add(classe = Classe(name = it))
+            isDialogShown = false
+        }, onDismiss = {
+            isDialogShown = false
+        })
     }
 }

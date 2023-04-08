@@ -12,9 +12,10 @@ class TeacherViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
     private val collectionPath = "Teachers"
 
-    fun isUserSignedIn(): Boolean {
-        return auth.currentUser != null
-    }
+    val isUserSignedIn: Boolean
+        get() {
+            return auth.currentUser != null
+        }
 
     fun createTeacher(fullName: String, email: String, password: String): Task<AuthResult> {
         return auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {

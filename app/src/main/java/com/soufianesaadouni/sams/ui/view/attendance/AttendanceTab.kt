@@ -18,11 +18,6 @@ import com.google.android.material.datepicker.MaterialDatePicker
 @Preview(showBackground = true)
 @Composable
 fun AttendanceTab(){
-        val datePicker = DatePickerDialog(
-            onDismissRequest = { /*TODO*/ },
-            confirmButton = { /*TODO*/ }) {
-        }
-
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,

@@ -9,13 +9,23 @@ import androidx.navigation.navArgument
 import com.soufianesaadouni.sams.ui.view.attendance.Attendance
 import com.soufianesaadouni.sams.ui.view.auth.LogIn
 import com.soufianesaadouni.sams.ui.view.auth.SignUp
-import com.soufianesaadouni.sams.ui.viewmodel.StudentViewModel
+import com.soufianesaadouni.sams.ui.viewmodel.TeacherViewModel
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
     // TODO pass this as parameter to children
-    NavHost(navController = navController, startDestination = "logIn") {
+
+    val startDestination: String
+
+    val teacherViewModel = TeacherViewModel()
+    startDestination = if (teacherViewModel.isUserSignedIn) {
+        "classes"
+    } else {
+        "logIn"
+    }
+
+    NavHost(navController = navController, startDestination = startDestination) {
         composable(route = "logIn") {
             LogIn(navController)
         }
@@ -25,8 +35,17 @@ fun Navigation() {
         composable(route = "classes") {
             Classes(navController)
         }
-        composable(route = "attendance") {
-            Attendance()
+        composable(
+            route = "attendance/{classeID}",
+            arguments = listOf(
+                navArgument(
+                    "classeID",
+                ) {
+                    type = NavType.StringType
+                })
+        ) { navBackStackEntry ->
+            val classeID = navBackStackEntry.arguments?.getString("classeID") ?: "Empty!"
+            Attendance(navController, classeID)
         }
         composable(route = "settings") {
             Settings()

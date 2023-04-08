@@ -7,7 +7,7 @@ import kotlinx.coroutines.tasks.await
 
 // Teachers(collection) -> Classes(collection) -> Students(collection)
 //https://i.stack.imgur.com/9EabI.png
-class ClasseRepository(private val db: FirebaseFirestore, private val auth: FirebaseAuth) {
+class ClasseRepository(private val db: FirebaseFirestore, auth: FirebaseAuth) {
     private val teacherID = auth.currentUser!!.uid
 
     suspend fun fetch(): List<Classe> {
@@ -17,10 +17,14 @@ class ClasseRepository(private val db: FirebaseFirestore, private val auth: Fire
             .collection("Classes")
             .get()
             .await()
-        return querySnapshot.toObjects(Classe::class.java)
+
+        return querySnapshot.map {
+            Classe(id = it.id, name = it.data["name"].toString())
+        }
+
+        //return querySnapshot.toObjects(Classe::class.java)
     }
 
-    //Good
     suspend fun add(classe: Classe) {
         val classeData = hashMapOf(
             "name" to classe.name,
@@ -64,5 +68,16 @@ class ClasseRepository(private val db: FirebaseFirestore, private val auth: Fire
             .document(classeID)
             .delete()
             .await()
+    }
+
+    suspend fun getByID(classeID: String): Classe? {
+        val documentSnapshot = db
+            .collection("Teachers")
+            .document(teacherID)
+            .collection("Classes")
+            .document(classeID)
+            .get()
+            .await()
+        return documentSnapshot.toObject(Classe::class.java)
     }
 }

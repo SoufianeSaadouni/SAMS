@@ -31,6 +31,7 @@ fun LogIn(
     navController: NavHostController = rememberNavController()
 ) {
     val teacherViewModel = TeacherViewModel()
+    /*
     if (teacherViewModel.isUserSignedIn()) {
         navController.navigate("classes") {
             // To remove this composable from the stack
@@ -38,7 +39,7 @@ fun LogIn(
                 inclusive = true
             }
         }
-    }
+    }*/
 
     var email by remember {
         mutableStateOf(TextFieldValue(""))
